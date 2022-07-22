@@ -79,7 +79,11 @@
             //localStorage.setItem(emailIN,myObj_serialized);
             axios.post("https://crudcrud.com/api/1ffae248827a40c4bcb56c416660c331/Bookings",myObj)
             .then((response)=>{
-                document.body.innerHTML=document.body.innerHTML+JSON.stringify(response.data);
+             const childHTML = `<li id=${JSON.stringify(response.data.email)}> ${JSON.stringify(response.data.name)} - ${JSON.stringify(response.data.email)}
+                                       <button onclick=deleteUser('${JSON.stringify(response.data.email)}')> Delete</button>
+                                       <button onclick=editUser('${JSON.stringify(response.data.email)}','${JSON.stringify(response.data.email)}')> Edit </button>
+                                    </li>`
+                document.body.innerHTML=document.body.innerHTML+childHTML
                 console.log(response)
             })
             .catch((err)=>{
@@ -98,10 +102,8 @@
 
         }
         
-        function deleteUser(emailId){
-                console.log(emailId)
-                localStorage.removeItem(emailId);
-                removeUserFromScreen(emailId);
+        function deleteUser(Id){
+                console.log(Id)
 
         }
         function editUser(emailId){
@@ -112,14 +114,29 @@
         
         
         window.addEventListener('DOMContentLoaded', (event) => {
-            let d = document.getElementById("lStrorage");
-            let mail;
-            for (var i = 0; i < localStorage.length; i++) { 
-                mail = localStorage.key(i);
-                let myobj_deserialized = JSON.parse(localStorage.getItem(mail));
-                var newText = document.createTextNode(' Name : '+myobj_deserialized.name+" Email : "+myobj_deserialized.email);
-                d.insertAdjacentHTML('beforeend', '<li id='+myobj_deserialized.email+'>'+newText.textContent+`<button onclick=deleteUser('${myobj_deserialized .email}')> Delete </button><button onclick=editUser('${myobj_deserialized.email}','${myobj_deserialized.name}')> Edit </button></li>`); 
+            axios.get("https://crudcrud.com/api/1ffae248827a40c4bcb56c416660c331/Bookings")
+            .then((response)=>{
+                let d = document.getElementById("lStrorage");
+            for (var i = 0; i < response.data.length; i++) { 
+                var newText = document.createTextNode(` Name :${JSON.stringify(response.data[i].name)}  Email : ${JSON.stringify(response.data[i].email)}`);
+                d.insertAdjacentHTML('beforeend', '<li id='+JSON.stringify(response.data[i]._id)+'>'+newText.textContent+`<button onclick=deleteUser(${JSON.stringify(response.data[i]._id)})> Delete </button><button onclick=editUser('${JSON.stringify(response.data[i].email)}','${JSON.stringify(response.data[i].name)}')> Edit </button></li>`); 
             }
+            console.log(response);
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+
+
+
+            // let d = document.getElementById("lStrorage");
+            // let mail;
+            // for (var i = 0; i < localStorage.length; i++) { 
+            //     mail = localStorage.key(i);
+            //     let myobj_deserialized = JSON.parse(localStorage.getItem(mail));
+            //     var newText = document.createTextNode(' Name : '+myobj_deserialized.name+" Email : "+myobj_deserialized.email);
+            //     d.insertAdjacentHTML('beforeend', '<li id='+myobj_deserialized.email+'>'+newText.textContent+`<button onclick=deleteUser('${myobj_deserialized .email}')> Delete </button><button onclick=editUser('${myobj_deserialized.email}','${myobj_deserialized.name}')> Edit </button></li>`); 
+            // }
             
         });
     </script>
