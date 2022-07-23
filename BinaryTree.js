@@ -15,7 +15,7 @@ class BinarySearchTree
         this.root = null;
     }
     insert(data){
-	var newNode = new Node(data);
+	let newNode = new Node(data);
 	if(this.root === null)
 		this.root = newNode;
 	else
@@ -55,18 +55,38 @@ class BinarySearchTree
     getRootNode(){
         return this.root;
     }
-    preorderTraversel(node){
+    preorderTraverselRecursive(node){
     if(node !== null)
         {
             console.log(node.data);
-            this.preorderTraversel(node.left);
-            this.preorderTraversel(node.right);
+            this.preorderTraverselRecursive(node.left);
+            this.preorderTraverselRecursive(node.right);
         }
     }
+    PreOrderiterative(node){
 
+        if (node == null){
+            return;
+        }
+        let stack = [];
+        stack.push(root);
+        
+        while (stack.length > 0){
+            let node = stack[stack.length - 1];
+            console.log(node.data);
+            stack.pop();
+            if (node.right != null){
+                stack.push(node.right);
+            }
+            if (node.left != null){
+                stack.push(node.left);
+            }
+        }
+
+    }
 }
 
-var BST = new BinarySearchTree();
+let BST = new BinarySearchTree();
 
 BST.insert(10);
 BST.insert(21);
@@ -75,11 +95,13 @@ BST.insert(2);
 BST.insert(50);
 
 let root = BST.getRootNode();
-
-BST.preorderTraversel(root);
-if(BST.search(root,15)!==null){
-    console.log("Found");
-}
-else{
-    console.log("Not Found")
-}
+console.log("Iterative  : ")
+BST.PreOrderiterative(root);
+console.log("Recursive  : ")
+BST.preorderTraverselRecursive(root);
+// if(BST.search(root,15)!==null){
+//     console.log("Found");
+// }
+// else{
+//     console.log("Not Found")
+// }
