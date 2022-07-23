@@ -33,7 +33,8 @@
     <script src ="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 
     <script type="text/javascript">
-
+      let editUserV = false;
+      let uId ;
         
         var form = document.getElementById('my-form');
         form.addEventListener('submit',additem);
@@ -52,58 +53,64 @@
 
         function additem(e){
             e.preventDefault();
-            
-            var nameIN = document.getElementById('name').value;
-            var emailIN = document.getElementById('email').value;
-            if (localStorage.getItem(emailIN) !== null){
-
-                localStorage.removeItem(emailIN);
-                removeUserFromScreen(emailIN);
-            }
-            let myObj = {
+              var nameIN = document.getElementById('name').value;
+              var emailIN = document.getElementById('email').value;
+              let myObj = {
                     name : nameIN,
                     email : emailIN
-            };
-            let myObj_serialized = JSON.stringify(myObj);
-            axios.post("https://crudcrud.com/api/0e30551dc8b84a4e83bbc6b4aafd7981/Bookings",myObj)
-            .then((response)=>{
-              showNewUserOnScreen(response.data)
-              console.log(response)
-            })
-            .catch((err)=>{
-                document.body.innerHTML=document.body.innerHTML+'Something went wrong.'
-                console.log(err)
-            })
-            let myobj_deserialized = JSON.parse(localStorage.getItem(emailIN));
-            var ul = document.getElementById('lStrorage');
-
+              };
+            if(editUserV){
+              
+                axios.put( `https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings/${uId}`,myObj)
+                .then((response)=>{
+                showNewUserOnScreen(myObj)
+                editUserV=false;
+              })
+                
+            }
+            else{
+              let myObj_serialized = JSON.stringify(myObj);
+              axios.post("https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings",myObj)
+              .then((response)=>{
+                showNewUserOnScreen(response.data)
+                console.log(response)
+              })
+              .catch((err)=>{
+                  document.body.innerHTML=document.body.innerHTML+'Something went wrong.'
+                  console.log(err)
+              })
+            }
+              document.getElementById("email").disabled = false;
+              document.getElementById('email').value = "";
+              document.getElementById('name').value = "";
         }
         
         function deleteUser(Id){
-            axios.delete(`https://crudcrud.com/api/0e30551dc8b84a4e83bbc6b4aafd7981/Bookings/${Id}`)
+            axios.delete(`https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings/${Id}`)
             console.log(Id)
             removeUserFromScreen(Id)
-                
+        }
 
+        function editUser(emailId,id){
+          document.getElementById('email').value = emailId;
+          document.getElementById("email").disabled = true;
+          uId = id;
+          editUserV=true;
+          removeUserFromScreen(id);
         }
-        function editUser(emailId){
-                document.getElementById('email').value = emailId;
-                document.getElementById('name').value = name;
-                deleteUser(emailId)
-        }
-        
+
         function showNewUserOnScreen(user){
           const parentNode = document.getElementById("lStrorage");
           const childNode = `<li id=${user._id}> Name : ${user.name} - Email : ${user.email}
                                         <button onclick=deleteUser('${user._id}')> Delete</button>
-                                        <button onclick=editUser('${user.email}','${user.name}')> Edit </button>
+                                        <button onclick=editUser('${user.email}','${user._id}')> Edit </button>
                                       </li>`;
           parentNode.innerHTML = parentNode.innerHTML+childNode;                            
-                
+
         }
         
         window.addEventListener('DOMContentLoaded', (event) => {
-            axios.get("https://crudcrud.com/api/0e30551dc8b84a4e83bbc6b4aafd7981/Bookings")
+            axios.get("https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings")
             .then((response)=>{
                 let d = document.getElementById("lStrorage");
             for (var i = 0; i < response.data.length; i++) { 
