@@ -59,18 +59,10 @@
                     name : nameIN,
                     email : emailIN
               };
-            if(editUserV){
-              
-                axios.put( `https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings/${uId}`,myObj)
-                .then((response)=>{
-                showNewUserOnScreen(myObj)
-                editUserV=false;
-              })
-                
-            }
-            else{
+
+
               let myObj_serialized = JSON.stringify(myObj);
-              axios.post("https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings",myObj)
+              axios.post("https://crudcrud.com/api/d5c2e798a6364b1e8a6110bb3e0ed138/Bookings",myObj)
               .then((response)=>{
                 showNewUserOnScreen(response.data)
                 console.log(response)
@@ -79,14 +71,14 @@
                   document.body.innerHTML=document.body.innerHTML+'Something went wrong.'
                   console.log(err)
               })
-            }
+            
               document.getElementById("email").disabled = false;
               document.getElementById('email').value = "";
               document.getElementById('name').value = "";
         }
         
         function deleteUser(Id){
-            axios.delete(`https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings/${Id}`)
+            axios.delete(`https://crudcrud.com/api/d5c2e798a6364b1e8a6110bb3e0ed138/Bookings/${Id}`)
             console.log(Id)
             removeUserFromScreen(Id)
         }
@@ -94,9 +86,7 @@
         function editUser(emailId,id){
           document.getElementById('email').value = emailId;
           document.getElementById("email").disabled = true;
-          uId = id;
-          editUserV=true;
-          removeUserFromScreen(id);
+          deleteUser(id);
         }
 
         function showNewUserOnScreen(user){
@@ -110,7 +100,7 @@
         }
         
         window.addEventListener('DOMContentLoaded', (event) => {
-            axios.get("https://crudcrud.com/api/2ed45afc2fd841deb52c804c9ddacd0c/Bookings")
+            axios.get("https://crudcrud.com/api/d5c2e798a6364b1e8a6110bb3e0ed138/Bookings")
             .then((response)=>{
                 let d = document.getElementById("lStrorage");
             for (var i = 0; i < response.data.length; i++) { 
