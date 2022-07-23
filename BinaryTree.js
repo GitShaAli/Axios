@@ -52,31 +52,31 @@ class BinarySearchTree
             else
                 return node.data;
     }
-    display(node){
-        if(node !== null)
-        {
-            this.display(node.left);
-            console.log(node.data);
-            this.display(node.right);
-        }
-    }
     getRootNode(){
         return this.root;
+    }
+    preorderTraversel(node){
+    if(node !== null)
+        {
+            console.log(node.data);
+            this.preorderTraversel(node.left);
+            this.preorderTraversel(node.right);
+        }
     }
 
 }
 
 var BST = new BinarySearchTree();
 
-BST.insert(15);
-BST.insert(25);
 BST.insert(10);
-BST.insert(7);
+BST.insert(21);
+BST.insert(9);
+BST.insert(2);
+BST.insert(50);
 
 let root = BST.getRootNode();
-BST.display(root);
 
-
+BST.preorderTraversel(root);
 if(BST.search(root,15)!==null){
     console.log("Found");
 }
